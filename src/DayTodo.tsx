@@ -2,6 +2,10 @@ import React, { useState, ChangeEvent, useEffect } from 'react';
 import { FilterValuesType } from './App';
 import s from './DayTodo.module.css';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
+import { encryptData, decryptData } from './cryptoUtils';
+import old from "./img/old.jpg";
+
+
 
 export interface TaskType {
     id: string;
@@ -36,7 +40,7 @@ const DayTodo: React.FC<DayTodoProps> = ({
     const addTaskHandler = () => {
         if (taskTitle.trim() === '') {
             alert('Title is required');
-            return; // Вийти з функції, якщо тайтл порожній
+            return;
         }
 
         addTask(taskTitle.trim());
@@ -54,9 +58,24 @@ const DayTodo: React.FC<DayTodoProps> = ({
         setError(null);
     };
 
-    const encryptAndSaveHandler = () => {
-        saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
+
+
+    const saveData = () => {
+        localStorage.setItem('taskValue', taskTitle.toString());
     };
+
+    const clearData = () => {
+        localStorage.removeItem('taskValue');
+        setTaskTitle('');
+    };
+
+    useEffect(() => {
+        const savedTask = localStorage.getItem('taskValue');
+        if (savedTask !== null) {
+            setTaskTitle((savedTask));
+        }
+    }, []);
+
 
     const loadDataHandler = () => {
         const savedData = loadDataFromLocalStorage(storageKey);
@@ -99,49 +118,74 @@ const DayTodo: React.FC<DayTodoProps> = ({
         }
     };
 
+    const saveCryptoData = () => {
+        const encryptedTasks = encryptData({ tasks: tasksState, title: taskTitle });
+        localStorage.setItem(storageKey, encryptedTasks);
+    };
+
+    const loadCryptoHandler = () => {
+        const encryptedData = localStorage.getItem(storageKey);
+        if (encryptedData) {
+            const decryptedData = decryptData(encryptedData);
+            setTasksState(decryptedData.tasks || []);
+            setTaskTitle(decryptedData.title || '');
+        }
+    };
+
 
     return (
-        <div className={s.todoDay}>
-            <h3>{title}</h3>
-            {error && <div className={s.error}>{error}</div>}
-            <div className={s.task}>
-                <input className={s.inputTodo} type="text" value={taskTitle} onChange={onChangeHandler} />
-                <button onClick={addTaskHandler} className={s.buttonAddTodo}>
-                    +
-                </button>
-                <button onClick={encryptAndSaveHandler} className={s.button}>
-                    Encrypt & Save
-                </button>
-                <button onClick={loadDataHandler} className={s.button}>
-                    Load Data
-                </button>
-                <ul className={s.taskList}>
-                    {tasksState.map((task) => (
-                        <li key={task.id} className={s.taskLi}>
-                            <div className={s.titleWithCheckbox}>
-                                <input
-                                    type="checkbox"
-                                    checked={task.isDone}
-                                    onChange={() => changeTaskStatusHandler(task.id)}
-                                />
-                                <div>{task.title}</div>
-                            </div>
-                            <button onClick={() => removeTaskHandler(task.id)} className={s.buttonRemoveTodo}>
-                                x
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-                <div className={s.buttonTrio}>
-                    <button onClick={() => onFilterButtonClick('all')} className={s.button}>
-                        All
+        <div>
+            <div className={s.samuraiImage}>
+                <img src={old} alt="old"/>
+            </div>
+            <div className={s.todoDay}>
+                <h3>{title}</h3>
+                {error && <div className={s.error}>{error}</div>}
+                <div className={s.task}>
+                    <input className={s.inputTodo} type="text" value={taskTitle} onChange={onChangeHandler}/>
+                    <button onClick={addTaskHandler} className={s.buttonAddTodo}>
+                        +
                     </button>
-                    <button onClick={() => onFilterButtonClick('active')} className={s.button}>
-                        Active
+                    <button onClick={saveData} className={s.button}>
+                        Save
                     </button>
-                    <button onClick={() => onFilterButtonClick('completed')} className={s.button}>
-                        Completed
+                    <button onClick={loadDataHandler} className={s.button}>
+                        Load
                     </button>
+                    <ul className={s.taskList}>
+                        {tasksState.map((task) => (
+                            <li key={task.id} className={s.taskLi}>
+                                <div className={s.titleWithCheckbox}>
+                                    <input
+                                        type="checkbox"
+                                        checked={task.isDone}
+                                        onChange={() => changeTaskStatusHandler(task.id)}
+                                    />
+                                    <div>{task.title}</div>
+                                </div>
+                                <button onClick={() => removeTaskHandler(task.id)} className={s.buttonRemoveTodo}>
+                                    x
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className={s.buttonTrio}>
+                        <button onClick={() => onFilterButtonClick('all')} className={s.button}>
+                            All
+                        </button>
+                        <button onClick={() => onFilterButtonClick('active')} className={s.button}>
+                            Active
+                        </button>
+                        <button onClick={() => onFilterButtonClick('completed')} className={s.button}>
+                            Completed
+                        </button>
+                        <button onClick={saveCryptoData} className={s.button}>
+                            Save Encrypted
+                        </button>
+                        <button onClick={loadCryptoHandler} className={s.button}>
+                            Load Encrypted
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

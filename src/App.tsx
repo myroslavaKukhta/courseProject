@@ -6,6 +6,8 @@ import WeekTodo from './WeekTodo';
 import Start from './Start';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 import { v1 } from 'uuid';
+import Home from "./Home";
+import News from "./News";
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
@@ -20,6 +22,7 @@ function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [filter, setFilter] = useState<FilterValuesType>('all');
     const [tasksForTodoList, setTasksForTodoList] = useState<Task[]>(tasks);
+
 
     const addTask = (title: string) => {
         let task: Task = { id: v1(), title: title, isDone: false };
@@ -63,9 +66,6 @@ function App() {
     };
 
 
-
-
-
     const handleRegistration = () => {
         setIsRegistered(true);
     };
@@ -75,9 +75,28 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route path="/start" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
+                    <Route path="/" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
                     {isRegistered && (
                         <>
+                            <Route
+                                path="/home"
+                                element={
+                                    <Home/>
+                                }
+                            />
+                            <Route
+                                path="/day"
+                                element={
+                                    <DayTodo
+                                        title="What to do today"
+                                        tasks={tasksForTodoList}
+                                        addTask={addTask}
+                                        removeTask={removeTask}
+                                        changeFilter={changeFilter}
+                                        changeTaskStatus={changeTaskStatus}
+                                    />
+                                }
+                            />
                             <Route
                                 path="/week"
                                 element={
@@ -92,16 +111,9 @@ function App() {
                                 }
                             />
                             <Route
-                                path="/day"
+                                path="/news"
                                 element={
-                                    <DayTodo
-                                        title="What to do today"
-                                        tasks={tasksForTodoList}
-                                        addTask={addTask}
-                                        removeTask={removeTask}
-                                        changeFilter={changeFilter}
-                                        changeTaskStatus={changeTaskStatus}
-                                    />
+                                    <News />
                                 }
                             />
                         </>

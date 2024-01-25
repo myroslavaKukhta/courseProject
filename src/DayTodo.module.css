@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Shojumaru&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+body {
+    font-family: 'Shojumaru', cursive;
+    background-color: grey;
+}
 .todoDay {
     width: 50%;
     height: 100%;
@@ -42,6 +49,7 @@
 .buttonTrio {
     display: flex;
     flex-direction: row;
+    font-family: 'Shojumaru', cursive;
 
 }
 
@@ -56,13 +64,24 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-family: 'Shojumaru', cursive;
+}
 
+.dayContainer {
+    display: flex;
+    justify-content: center;
+}
+
+
+.toggleButton {
+    display: inline-flex;
+    justify-content: center;
+    width: 50%;
 }
 
 .buttonAddTodo,
 .buttonRemoveTodo {
     font-size: 14px;
-
     height: 35px;
     border-radius: 8px;
 }
@@ -86,3 +105,15 @@ input[type="checkbox"] {
     width: 20px;
     height: 20px;
 }
+
+
+@keyframes samuraiImage{
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.samuraiImage {
+    animation: samuraiImage 15s infinite;
+    position: absolute;
+}
+

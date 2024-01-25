@@ -3,6 +3,9 @@ import DayTodo from './DayTodo';
 import { TaskType } from './DayTodo';
 import { FilterValuesType } from './App';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
+import s from "./DayTodo.module.css";
+import samurai from "./img/samurai.jpg";
+import DailyEntry from "./DailyEntry";
 
 interface WeekTodoProps {
     title: string;
@@ -46,20 +49,38 @@ const WeekTodo: React.FC<WeekTodoProps> = ({
         }));
     };
 
+    const [expandedDay, setExpandedDay] = useState<string | null>(null);
+
+    const toggleDay = (day: string) => {
+        setExpandedDay(expandedDay === day ? null : day);
+    };
+
     return (
         <div>
             <h2>{title}</h2>
-            <div className="days-todo">
-                {days.map((day, index) => (
-                    <DayTodo
-                        key={day}
-                        title={day}
-                        tasks={dailyTasks[day] || []}
-                        addTask={(text) => addTaskToDay(day, text)}
-                        removeTask={(id) => removeTaskFromDay(day, id)}
-                        changeFilter={changeFilter}
-                        changeTaskStatus={changeTaskStatus}
-                    />
+            <div className={s.samuraiImage}>
+                <img src={samurai} alt="Samurai" />
+            </div>
+            <DailyEntry/>
+            <div>
+                {days.map((day) => (
+                    <div key={day}>
+                        <div className={s.dayContainer}>
+                        <button onClick={() => toggleDay(day)} className={s.toggleButton}>
+                            {day} {expandedDay === day ? '-' : '+'}
+                        </button>
+                            </div>
+                        {expandedDay === day && (
+                            <DayTodo
+                                title={day}
+                                tasks={dailyTasks[day] || []}
+                                addTask={(text) => addTaskToDay(day, text)}
+                                removeTask={(id) => removeTaskFromDay(day, id)}
+                                changeFilter={changeFilter}
+                                changeTaskStatus={changeTaskStatus}
+                            />
+                        )}
+                    </div>
                 ))}
             </div>
         </div>

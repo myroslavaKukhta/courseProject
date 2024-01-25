@@ -1,12 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import './Start.module.css';
+import s from './Start.module.css';
+import samur from './img/samur.jpg';
+import CryptoJS from 'crypto-js';
 
 interface StartProps {
-    handleRegistration: () => void;
+    handleRegistration: (encryptedData: { username: string; email: string; password: string; }) => void;
     isRegistered: boolean;
 }
 
-const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
+const Start: React.FC<StartProps> = ({handleRegistration, isRegistered}) => {
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -14,7 +16,7 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -24,12 +26,20 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (formData.password.length >= 6 && formData.username && formData.email) {
-            handleRegistration();
+            const encryptedPassword = CryptoJS.AES.encrypt(formData.password, 'secret key 123').toString();
+
+            handleRegistration({
+                username: formData.username,
+                email: formData.email,
+                password: encryptedPassword,
+            });
+
             setFormData({
                 username: '',
                 email: '',
                 password: '',
             });
+
             alert('Congratulation! Registration successful!');
         } else {
             console.error('Registration error! Check the entered data!');
@@ -37,12 +47,20 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     };
 
     if (isRegistered) {
-        return <p>You are already registered!</p>;
+        return (
+            <>
+                <div className={s.text}>
+                    <h2>You are already registered!</h2>
+                    <h3>Go to your tasks!</h3>
+                </div>
+                <img src={samur} alt="samur" />
+            </>
+        );
     }
 
     return (
         <div>
-            <h2>Hello! You need to be registered before use this secret App</h2>
+            <h2>Hello! Samurai, you need to be registered before use this App</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Username:
@@ -55,12 +73,13 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
                         required
                     />
                 </label>
-                <br />
+                <br/>
                 <label>
                     Email:
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email" required />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange}
+                           placeholder="Enter email" required/>
                 </label>
-                <br />
+                <br/>
                 <label>
                     Password:
                     <input
@@ -73,8 +92,8 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
                         required
                     />
                 </label>
-                <br />
-                <button type="submit">Submit</button>
+                <br/>
+                <button className={s.button} type="submit">Submit</button>
             </form>
         </div>
     );
