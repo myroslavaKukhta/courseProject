@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/courseProject/static/css/main.773af099.css",
+    "main.js": "/courseProject/static/js/main.27378149.js",
+    "static/js/787.d656a76a.chunk.js": "/courseProject/static/js/787.d656a76a.chunk.js",
+    "static/media/samur.jpg": "/courseProject/static/media/samur.9d44c7c6700b755cb32e.jpg",
+    "static/media/onHorse.webp": "/courseProject/static/media/onHorse.33dc66b52155879644c1.webp",
+    "static/media/old.jpg": "/courseProject/static/media/old.459dbe473ea1062e2e9e.jpg",
+    "static/media/samurai.jpg": "/courseProject/static/media/samurai.95c3ed0151b0c8a3dc3c.jpg",
+    "static/media/deadSamur.jpg": "/courseProject/static/media/deadSamur.f63c5310e7b36d8728fa.jpg",
+    "index.html": "/courseProject/index.html",
+    "main.773af099.css.map": "/courseProject/static/css/main.773af099.css.map",
+    "main.27378149.js.map": "/courseProject/static/js/main.27378149.js.map",
+    "787.d656a76a.chunk.js.map": "/courseProject/static/js/787.d656a76a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.773af099.css",
+    "static/js/main.27378149.js"
+  ]
+}
